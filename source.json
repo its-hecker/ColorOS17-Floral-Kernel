@@ -1,0 +1,9 @@
+{
+  "device": "floral",
+  "primary_target": "coral",
+  "kernel": "Linux 4.14",
+  "upstream": "https://github.com/its-hecker/heckeros-floral-kernel",
+  "branch": "cnb_latest_stable",
+  "commit": "73ede50b7eb81b081a314be06f4fe89fc742946f",
+  "role": "read-only input for stage-0 binary port"
+}

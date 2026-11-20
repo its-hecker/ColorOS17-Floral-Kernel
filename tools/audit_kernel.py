@@ -26,7 +26,7 @@ def audit(root):
             version = f"{m.group(1)}.{n.group(1)}"
     config_path = root / "arch/arm64/configs/floral_defconfig"
     config_text = config_path.read_text(errors="replace") if config_path.is_file() else ""
-    flags = {name: (re.search(r"^" + re.escape(name) + r"=y\\s*$",
+    flags = {name: (re.search(r"^" + re.escape(name) + r"=y\s*$",
                                config_text, re.M) is not None)
              for name in BOOT_CONFIG_FLAGS}
     info = {"kernel_path": str(root.resolve()), "required": results,

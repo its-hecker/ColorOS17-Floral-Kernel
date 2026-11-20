@@ -1,0 +1,17 @@
+name: ColorOS17 floral kernel source audit tests
+
+on:
+  push:
+    branches: [dev/coloros17-firstboot]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m unittest discover -s tests -v

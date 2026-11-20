@@ -5,6 +5,13 @@ import json
 import re
 from pathlib import Path
 
+BOOT_CONFIG_FLAGS = (
+    "CONFIG_BPF_SYSCALL", "CONFIG_CGROUP_BPF", "CONFIG_BPF_JIT",
+    "CONFIG_ANDROID_BINDER_IPC", "CONFIG_ANDROID_BINDERFS",
+    "CONFIG_F2FS_FS", "CONFIG_OVERLAY_FS", "CONFIG_SECURITY_SELINUX",
+    "CONFIG_SECCOMP",
+)
+
 
 def audit(root):
     required = ["Makefile", "build.config.floral", "arch/arm64", "drivers"]
@@ -17,10 +24,18 @@ def audit(root):
         n = re.search(r"^PATCHLEVEL\s*=\s*(\d+)\s*$", text, re.M)
         if m and n:
             version = f"{m.group(1)}.{n.group(1)}"
+    config_path = root / "arch/arm64/configs/floral_defconfig"
+    config_text = config_path.read_text(errors="replace") if config_path.is_file() else ""
+    flags = {name: (re.search(r"^" + re.escape(name) + r"=y\\s*$",
+                               config_text, re.M) is not None)
+             for name in BOOT_CONFIG_FLAGS}
     info = {"kernel_path": str(root.resolve()), "required": results,
+            "boot_config_source_flags": flags,
+            "warning": "Defconfig presence does not prove the compiled kernel "
+                       "has these features or that ColorOS BPF programs load.",
             "kernel_series": version, "kernelsu_gitmodules_present":
             (root / ".gitmodules").is_file(),
-            "pass": all(results.values()) and version == "4.14"}
+            "pass": all(results.values()) and all(flags.values()) and version == "4.14"}
     return info
 
 

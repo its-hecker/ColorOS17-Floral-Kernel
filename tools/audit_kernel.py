@@ -13,8 +13,8 @@ def audit(root):
     makefile = root / "Makefile"
     if makefile.is_file():
         text = makefile.read_text(errors="replace")
-        m = re.search(r"^VERSION\\s*=\\s*(\\d+)\\s*$", text, re.M)
-        n = re.search(r"^PATCHLEVEL\\s*=\\s*(\\d+)\\s*$", text, re.M)
+        m = re.search(r"^VERSION\s*=\s*(\d+)\s*$", text, re.M)
+        n = re.search(r"^PATCHLEVEL\s*=\s*(\d+)\s*$", text, re.M)
         if m and n:
             version = f"{m.group(1)}.{n.group(1)}"
     info = {"kernel_path": str(root.resolve()), "required": results,
